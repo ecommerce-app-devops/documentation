@@ -745,43 +745,6 @@ mvn test -Dspring.profiles.active=test
 | Payment Service | - | ✅ |
 | Shipping Service | - | ✅ |
 
----
-
-## Best Practices
-
-### Test Organization
-- **Unit Tests**: Fast, isolated, use mocks
-- **Integration Tests**: Test real interactions, use test database
-- **E2E Tests**: Test complete workflows, validate system integration
-- **Performance Tests**: Validate system under load
-
-### Test Naming
-- Use descriptive test method names
-- Follow pattern: `test{Method}_{Scenario}_{ExpectedResult}`
-- Use `@DisplayName` for readable test descriptions
-
-### Test Data Management
-- Use `@BeforeEach` for test setup
-- Clean up test data after each test
-- Use `@Transactional` for integration tests
-- Use unique test data to avoid conflicts
-
-### Assertions
-- Use specific assertions (not just `assertTrue`)
-- Verify expected behavior, not implementation
-- Test both success and failure scenarios
-- Validate error messages and exceptions
-
-### Mocking
-- Mock external dependencies
-- Verify mock interactions
-- Use realistic mock data
-- Test error scenarios with mocks
-
----
-
-## Troubleshooting
-
 ### Common Issues
 
 #### E2E Tests Failing
