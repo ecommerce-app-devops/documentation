@@ -81,15 +81,18 @@ Los pipelines están organizados en dos niveles:
 **Ubicación**: `ci-pipelines/.github/workflows/run-e2e.yml`  
 **Tipo**: Template reutilizable (workflow_call y workflow_dispatch)
 
-**Propósito**: Ejecutar pruebas end-to-end (E2E) contra servicios desplegados en Kubernetes
+**Propósito**: Ejecutar pruebas end-to-end (E2E) y pruebas de rendimiento contra servicios desplegados en Kubernetes
 
 **Proceso**:
-1. **Checkout de templates**: Clona el repositorio de templates CI
-2. **Autenticación Azure**: Inicia sesión en Azure
-3. **Instalación kubectl**: Instala kubectl
-4. **Obtención de credenciales AKS**: Obtiene las credenciales del cluster AKS
-5. **Obtención de IP del API Gateway**: Obtiene la IP pública del API Gateway desde Kubernetes
-6. **Verificación de servicios en Eureka**: Verifica que todos los servicios están registrados en Eureka:
+1. **Checkout del repositorio**: Obtiene el código del repositorio actual
+2. **Configuración Java 11**: Instala JDK 11 para ejecutar las pruebas E2E
+3. **Autenticación Azure**: Inicia sesión en Azure
+4. **Limpieza de cache Azure CLI**: Limpia la caché de MSAL
+5. **Actualización Azure CLI**: Actualiza Azure CLI a la última versión
+6. **Instalación kubectl**: Instala kubectl
+7. **Obtención de credenciales AKS**: Obtiene las credenciales del cluster AKS
+8. **Obtención de IP del API Gateway**: Obtiene la IP pública del API Gateway desde Kubernetes (espera hasta 30 intentos)
+9. **Verificación de servicios en Eureka**: Verifica que todos los servicios están registrados en Eureka:
    - API-GATEWAY
    - USER-SERVICE
    - PRODUCT-SERVICE
@@ -98,20 +101,35 @@ Los pipelines están organizados en dos niveles:
    - SHIPPING-SERVICE
    - FAVOURITE-SERVICE
    - PROXY-CLIENT
-7. **Actualización de colección Postman**: Actualiza la colección de Postman con la IP dinámica del API Gateway
-8. **Actualización de test K6**: Actualiza el test de rendimiento K6 con la IP dinámica
-9. **Instalación Node.js**: Instala Node.js versión 18
-10. **Instalación K6**: Instala K6 para pruebas de rendimiento
-11. **Ejecución de prueba de rendimiento**: Ejecuta el test K6
-12. **Instalación Newman**: Instala Newman (ejecutor de Postman)
-13. **Ejecución de pruebas Postman**: Ejecuta la colección de Postman con Newman
+10. **Ejecución de pruebas E2E**: 
+    - Ejecuta las pruebas E2E con Maven usando `mvn test -Dtest=*E2ETest`
+    - Configura la URL del API Gateway como variable de entorno y propiedad del sistema
+    - Sube los resultados de las pruebas como artefactos
+11. **Configuración Python 3.9**: Instala Python 3.9 para ejecutar Locust
+12. **Instalación de dependencias Locust**: Instala las dependencias desde `requirements.txt`
+13. **Ejecución de pruebas de rendimiento con Locust**:
+    - Ejecuta Locust en modo headless contra el API Gateway
+    - Configuración: 100 usuarios concurrentes, 10 usuarios/segundo de spawn rate, 2 minutos de duración
+    - Genera reportes HTML y CSV
+    - Sube los resultados como artefactos
 
 **Entradas**:
 - `namespace`: Namespace donde están desplegados los servicios (default: dev)
 
+**Secrets requeridos**:
+- `AZURE_CLIENT_ID`: Client ID de Azure
+- `AZURE_CLIENT_SECRET`: Client Secret de Azure
+- `AZURE_TENANT_ID`: Tenant ID de Azure
+- `AZURE_SUBSCRIPTION_ID`: Subscription ID de Azure
+- `RESOURCE_GROUP`: Resource Group de Azure
+
 **Triggers**:
 - Manual (workflow_dispatch)
 - Llamado desde otros workflows (workflow_call)
+
+**Artefactos generados**:
+- `e2e-test-results`: Reportes XML y TXT de las pruebas E2E ejecutadas con Maven
+- `locust-results`: Reporte HTML y archivos CSV con los resultados de las pruebas de rendimiento
 
 ---
 
@@ -275,7 +293,7 @@ Los pipelines están organizados en dos niveles:
    └─> pr-to-stage.yml
        └─> pr-stage.yaml
            ├─> Build and deploy (tag: stage)
-           └─> Run E2E tests
+           └─> Run E2E and performance tests (Maven + Locust)
 
 4. PR mergeado a 'stage'
    └─> build.yml
@@ -300,7 +318,7 @@ Los pipelines están organizados en dos niveles:
 |----------|---------|-------------------|-----------|
 | **build.yml** (template) | workflow_call | Build + Push + Deploy | Imagen en ACR y desplegada en K8s |
 | **deploy-kube.yml** | workflow_call | Deploy a Kubernetes | Servicio desplegado en AKS |
-| **run-e2e.yml** | workflow_call/dispatch | Ejecutar pruebas E2E | Validación de servicios |
+| **run-e2e.yml** | workflow_call/dispatch | Ejecutar pruebas E2E y de rendimiento (Maven + Locust) | Validación de servicios y rendimiento |
 | **remote-e2e.yml** | workflow_call | Wrapper para E2E | Llama a run-e2e.yml |
 | **pr-stage.yaml** | workflow_call | Build + Deploy + E2E | Validación para stage |
 | **pr-dev.yaml** | workflow_call | SonarCloud + Tests | Análisis de calidad |
