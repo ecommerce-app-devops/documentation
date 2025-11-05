@@ -14,6 +14,28 @@ Documentación técnica detallada que incluye:
 
 ---
 
+### 2. [PipelinesDocumentation.md](./PipelinesDocumentation.md)
+**Documentación de Pipelines CI/CD**
+
+Documentación completa de los pipelines implementados:
+- Descripción de cada pipeline template
+- Flujos de CI/CD por servicio
+- Configuración requerida
+
+---
+
+### 3. [ReporteProblemasDespliegue.md](./ReporteProblemasDespliegue.md)
+**Reporte de Problemas de Despliegue**
+
+Análisis detallado de los problemas encontrados durante la implementación:
+- Problemas con Jenkins y Minikube local
+- Problemas con Azure Kubernetes Service y GitHub Actions
+- Análisis de causas raíz
+- Lecciones aprendidas y recomendaciones
+- Proceso detallado seguido
+
+---
+
 ## Inicio Rápido
 
 ### Ejecutar Todas las Pruebas
