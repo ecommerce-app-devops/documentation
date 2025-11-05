@@ -327,7 +327,3 @@ Todos los pipelines requieren los siguientes secrets configurados en GitHub:
 - `RESOURCE_GROUP`: Resource Group de Azure
 - `GH_TOKEN`: Token de GitHub para clonar repositorios privados
 
----
-
-*Última actualización: 2024*
-

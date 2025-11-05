@@ -4,54 +4,13 @@ Este directorio contiene la documentación completa del proceso de pruebas imple
 
 ## Documentos Disponibles
 
-### 1. [REPORTE_PRUEBAS.md](./REPORTE_PRUEBAS.md)
-**Reporte Completo del Proceso y Resultados**
-
-Documento formal y completo que incluye:
-- Introducción y contexto del proyecto
-- Metodología de pruebas implementada
-- Proceso completo paso a paso
-- Detalle de todas las pruebas implementadas
-- Resultados obtenidos y métricas
-- Análisis de resultados
-- Conclusiones y recomendaciones
-- Anexos con comandos y referencias
-
----
-
-### 2. [TestingDocumentation.md](./TestingDocumentation.md)
+### 1. [TestingDocumentation.md](./TestingDocumentation.md)
 **Guía Técnica de Pruebas**
 
 Documentación técnica detallada que incluye:
 - Descripción técnica de cada tipo de prueba
 - Guías de ejecución paso a paso
 - Ejemplos de código y comandos
-- Configuración de herramientas
-- Mejores prácticas
-- Troubleshooting
-
----
-
-## Resumen Ejecutivo
-
-### Cobertura de Pruebas
-
-| Tipo de Prueba | Cantidad |
-|----------------|----------|
-| Pruebas Unitarias | 30+ |
-| Pruebas de Integración | 5+ |
-| Pruebas E2E | 7+ |
-| Escenarios de Rendimiento | 10 |
-| TOTAL | 52+ |
-
-### Servicios Cubiertos
-
-- User Service (Unit + Integration + E2E)
-- Order Service (Unit + Integration + E2E)
-- Favourite Service (Unit + Integration + E2E)
-- Payment Service (Integration + E2E)
-- Shipping Service (Integration + E2E)
-- Product Service (E2E)
 
 ---
 
